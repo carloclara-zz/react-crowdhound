@@ -1,0 +1,94 @@
+/* Global styles */
+#app {
+	font-family: 'Avenir', Helvetica, Arial, sans-serif;
+	color: #4a4a4a;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	.header-bar {
+		height: 100px;
+		padding: 0px;
+
+		img {
+			margin: 10px;
+			height: 80px;
+			float: left;
+		}
+	}
+}
+
+figure {
+	padding: 0;
+	margin: 0;
+}
+
+.has-text-centered {
+    text-align: center !important;
+}
+
+.image {
+    display: block;
+	position: relative;
+}
+.is-128x128 {
+    height: 128px;
+    width: 128px;
+}
+.image img {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+.has-text-right {
+    text-align: right !important;
+}
+
+.ch-comments {
+	padding-right: 30px;
+}
+
+.ch-comment-single-comment {
+	font-size: 14px;
+	padding-bottom: 5px;
+
+	.ch-comment-maintable {
+		width: 100%;
+		border-top: solid 1px #ddd;
+		.ch-comment-left-cell {
+			padding-left: 20px;
+			padding-right: 20px;
+			padding-top: 20px;
+			padding-bottom: 10px;
+			width: 148px; // Yep, not possible.
+			vertical-align: top;
+			.ch-comment-userid {
+				padding-top: 5px;
+				font-size: 12px;
+				font-weight: 600;
+			}
+		}
+
+		.ch-comment-right-cell {
+			text-align: justify;
+			vertical-align: top;
+			.ch-tiny-id {
+				font-size: 8px;
+			}
+
+			padding-top: 5px;
+			padding-left: 20px;
+			padding-right: 0px;
+
+			.ch-description {
+				min-height: 100px;
+			}
+
+			.my-after-hr {
+				padding: 0px;
+				margin: 10px;
+			}
+		}
+    }
+    
+}
