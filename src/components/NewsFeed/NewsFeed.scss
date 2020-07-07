@@ -72,6 +72,9 @@
             cursor: pointer;
             font-weight: 600;
         }
+        .liked {            
+            color: #059e90;
+        }
     }
 }
 
@@ -99,8 +102,9 @@ span.ch-newsfeed-date, span.ch-comments-date  {
 div.ch-notification-wrapper {
     margin-top: 5px;
     font-size: 12px;
-    display: flex;
-    div {
+    span {
+        cursor: pointer;
+        display: inline-block;
         margin-right: 10px;
     }
 }
