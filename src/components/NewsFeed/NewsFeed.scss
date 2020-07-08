@@ -27,7 +27,7 @@
 
 .ch-newsfeed-wrapper {
     background-color: #ffffff;
-    padding: 5px;
+    padding: 10px;
     margin-bottom: 10px;
 }
 
@@ -55,26 +55,15 @@
         text-align: left;
         vertical-align: middle;
     }
-    .ch-newsfeed-description, .ch-comments-description {
-        font-size: 12px;
-        text-align: justify;
+    
+}
+
+.ch-newsfeed-description, .ch-comments-description {
+    font-size: 12px;
+    text-align: justify;
+    margin: 0;
+    p {
         margin: 0;
-        p {
-            margin: 0;
-        }
-    }
-    .ch-action-cell {
-        padding: 5px 0;
-        font-size: 12px;
-        label {
-            display: inline-block;
-            margin-right: 5px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .liked {            
-            color: #059e90;
-        }
     }
 }
 
@@ -94,9 +83,15 @@ span.ch-newsfeed-userid, span.ch-comments-userid {
     font-weight: 600;
 }
 
-span.ch-newsfeed-date, span.ch-comments-date  {
+span.ch-newsfeed-date {
     display: block;
     font-size: 12px;
+}
+
+span.ch-comments-date {
+    display: block;
+    font-size: 11px;
+    margin-bottom: 5px;
 }
 
 div.ch-notification-wrapper {
@@ -106,6 +101,20 @@ div.ch-notification-wrapper {
         cursor: pointer;
         display: inline-block;
         margin-right: 10px;
+    }
+}
+
+.ch-action-wrapper {
+    padding: 5px 0;
+    font-size: 12px;
+    label {
+        display: inline-block;
+        margin-right: 5px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    .liked {            
+        color: #059e90;
     }
 }
 
