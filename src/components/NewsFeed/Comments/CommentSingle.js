@@ -4,19 +4,21 @@ import ShowMore from 'react-show-more'
 import Comments from './Comments'
 import anonymousAvatar from '../../../assets/images/anonymous-avatar.png'
 
-const CommentSingle = ({ element = {} }) => {
+const CommentSingle = ({ element = {}, userData = {} }) => {
   const [data, setData] = useState(element)
   const [comment, setComment] = useState('')
   useEffect(() => {
     setData(element)
   }, [element])
-  const insertComment = async (e, parentId) => {
+  const insertComment = async (e, parentId, rootId) => {
     if (e.keyCode === 13) {
       const payload = {
         id: null,
-        rootId: '$samplenewsfeed',
+        rootId: rootId,
         parentId: parentId,
         type: 'newsFeedChildComment',
+        title: userData.userId,
+        summary: userData.name,
         description: comment,
         status: 'active',
         deleted: 'false'
@@ -48,11 +50,11 @@ const CommentSingle = ({ element = {} }) => {
     const likes = parsedExtraProperties.likes || []
     // Prevent duplicate user inserts
     const filteredLikes = likes.filter((obj) => {
-      return obj.userId !== 'johnjoe'
+      return obj.userId !== userData.userId
     })
     // Insert new object if is not existing in the 'likes' array
     if (likes.length === filteredLikes.length) {
-      filteredLikes.push({ userId: 'johnjoe', name: 'John Joe' })
+      filteredLikes.push({ userId: userData.userId, name: userData.name })
     }
     const payload = {
       id,
@@ -83,7 +85,7 @@ const CommentSingle = ({ element = {} }) => {
       totalLikes = extraProperties.likes.length
       // Check if the current user already liked the comment
       filteredUserLike = extraProperties.likes.filter((obj) => {
-        return obj.userId === 'johnjoe'
+        return obj.userId === userData.userId
       })
       // Collect all names who've liked the comment
       extraProperties.likes.forEach((obj) => {
@@ -138,7 +140,7 @@ const CommentSingle = ({ element = {} }) => {
             </td>
             <td className='ch-comments-right-cell'>
               <span className='ch-comments-userid'>
-                {data.userId === '0' ? 'Unknown' : data.userId}
+                {data.summary ? data.summary : 'Unknown'}
               </span>
               <span className='ch-comments-date'>
                 {dateFromNow(data.created)}
@@ -154,7 +156,7 @@ const CommentSingle = ({ element = {} }) => {
                 </ShowMore>
               </div>
               {notificationCounter(data)}
-              <Comments elements={data.children} />
+              <Comments elements={data.children} userData={userData} />
               {data.type === 'newsFeedComment' && (
                 <div>
                   <table className='ch-comments-maintable'>
@@ -173,7 +175,9 @@ const CommentSingle = ({ element = {} }) => {
                             type='text'
                             placeholder='Write a comment...'
                             value={comment}
-                            onKeyUp={(e) => insertComment(e, data.id)}
+                            onKeyUp={(e) =>
+                              insertComment(e, data.id, data.parentId)
+                            }
                             onChange={(e) => {
                               setComment(e.target.value)
                             }}

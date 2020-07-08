@@ -1,11 +1,11 @@
 import React from 'react'
 import CommentSingle from './CommentSingle'
 
-const Comments = ({ elements = [] }) => {
+const Comments = ({ elements = [], userData }) => {
   return (
     <div>
       {elements.map((element, key) => (
-        <CommentSingle element={element} key={key} />
+        <CommentSingle userData={userData} element={element} key={key} />
       ))}
     </div>
   )

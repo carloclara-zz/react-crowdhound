@@ -1,8 +1,9 @@
 import React, { useEffect, useState, crowdhound } from 'react'
 import NewsFeedList from './NewsFeedList'
 import './NewsFeed.scss'
+import anonymousAvatar from '../../assets/images/anonymous-avatar.png'
 
-export default ({ elementId }) => {
+export default ({ elementId, userData = {} }) => {
   const [createdElement, setCreatedElement] = useState('')
   const [post, setPost] = useState('')
   const [element, setElement] = useState({})
@@ -14,7 +15,8 @@ export default ({ elementId }) => {
         rootId: '$samplenewsfeed',
         parentId: '$samplenewsfeed',
         type: 'newsFeed',
-        title: 'Test News Feed',
+        title: userData.userId,
+        summary: userData.name,
         description: post,
         status: 'active',
         deleted: 'false'
@@ -40,6 +42,20 @@ export default ({ elementId }) => {
   return (
     <div id='app-ch-newsfeed'>
       <div className='ch-newsfeed-form-wrapper'>
+        <table className='ch-newsfeed-maintable'>
+          <tbody>
+            <tr>
+              <td className='ch-newsfeed-left-cell'>
+                <img className='ch-newsfeed-avatar' src={anonymousAvatar} />
+              </td>
+              <td className='ch-newsfeed-right-cell'>
+                <span className='ch-newsfeed-userid'>
+                  {userData.name ? userData.name : 'Unknown'}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <textarea
           className='ch-newsfeed-post-textarea'
           placeholder={`What's on your mind?`}
@@ -50,7 +66,7 @@ export default ({ elementId }) => {
         />
         <button onClick={insertPost}>POST</button>
       </div>
-      <NewsFeedList elements={element.children} />
+      <NewsFeedList elements={element.children} userData={userData} />
     </div>
   )
 }

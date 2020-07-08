@@ -4,7 +4,7 @@ import ShowMore from 'react-show-more'
 import Comments from './Comments'
 import anonymousAvatar from '../../assets/images/anonymous-avatar.png'
 
-const NewsFeedSingle = ({ element = {} }) => {
+const NewsFeedSingle = ({ element = {}, userData = {} }) => {
   const [data, setData] = useState(element)
   const [comment, setComment] = useState('')
   useEffect(() => {
@@ -14,9 +14,11 @@ const NewsFeedSingle = ({ element = {} }) => {
     if (e.keyCode === 13) {
       const payload = {
         id: null,
-        rootId: '$samplenewsfeed',
+        rootId: parentId,
         parentId: parentId,
         type: 'newsFeedComment',
+        title: userData.userId,
+        summary: userData.name,
         description: comment,
         status: 'active',
         deleted: 'false'
@@ -48,11 +50,11 @@ const NewsFeedSingle = ({ element = {} }) => {
     const likes = parsedExtraProperties.likes || []
     // Prevent duplicate user inserts
     const filteredLikes = likes.filter((obj) => {
-      return obj.userId !== 'johnjoe'
+      return obj.userId !== userData.userId
     })
     // Insert new object if is not existing in the 'likes' array
     if (likes.length === filteredLikes.length) {
-      filteredLikes.push({ userId: 'johnjoe', name: 'John Joe' })
+      filteredLikes.push({ userId: userData.userId, name: userData.name })
     }
     const payload = {
       id,
@@ -83,7 +85,7 @@ const NewsFeedSingle = ({ element = {} }) => {
       totalLikes = extraProperties.likes.length
       // Check if the current user already liked the comment
       filteredUserLike = extraProperties.likes.filter((obj) => {
-        return obj.userId === 'johnjoe'
+        return obj.userId === userData.userId
       })
       // Collect all names who've liked the comment
       extraProperties.likes.forEach((obj) => {
@@ -132,7 +134,7 @@ const NewsFeedSingle = ({ element = {} }) => {
             </td>
             <td className='ch-newsfeed-right-cell'>
               <span className='ch-newsfeed-userid'>
-                {data.userId === '0' ? 'Unknown' : data.userId}
+                {data.summary ? data.summary : 'Unknown'}
               </span>
               <span className='ch-newsfeed-date'>
                 {dateFromNow(data.created)}
@@ -152,7 +154,7 @@ const NewsFeedSingle = ({ element = {} }) => {
         </ShowMore>
       </div>
       {notificationCounter(data)}
-      <Comments elements={data.children} />
+      <Comments elements={data.children} userData={userData} />
       <table className='ch-comments-maintable'>
         <tbody>
           <tr>
