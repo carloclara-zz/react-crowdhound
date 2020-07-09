@@ -25,10 +25,22 @@
     box-sizing: border-box;
 }
 
-.ch-newsfeed-wrapper {
-    background-color: #ffffff;
+.ch-editable-comments-wrapper {
+    text-align: right;
+    button {
+        margin-top: 5px;
+        cursor: pointer;
+    }
+}
+
+.ch-newsfeed-main-wrapper {
     padding: 10px;
+    background-color: #ffffff;
     margin-bottom: 10px;
+}
+
+.ch-newsfeed-wrapper, .ch-comments-wrapper {   
+    position: relative;
 }
 
 .ch-comments-textbox {
@@ -40,6 +52,46 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+div.ch-options-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    img.ch-more-icon {
+        height: 15px;
+        width: 20px;
+        cursor: pointer;
+    }
+    div.ch-options-actions-wrapper {
+        position: relative;
+        visibility: hidden;
+    }
+    div.ch-options-actions {
+        position: absolute;
+        top: -7px;
+        right: 1px;
+        border: 1px solid #ccd0d5;
+        background-color: #F2F3F5;
+        span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #7b7b7b;
+            cursor: pointer;
+            display: block;
+            padding: 2px 15px;
+        }
+        span:hover {
+            color: #ffffff;
+            background-color: #7b7b7b;
+        }
+    }
+}
+
+div.ch-options-wrapper:hover {
+    div.ch-options-actions-wrapper {
+        visibility: visible;
+    }
 }
 
 .ch-newsfeed-maintable, .ch-comments-maintable {
@@ -54,8 +106,7 @@
     .ch-newsfeed-right-cell, .ch-comments-right-cell {
         text-align: left;
         vertical-align: middle;
-    }
-    
+    }    
 }
 
 .ch-newsfeed-description, .ch-comments-description {
@@ -85,7 +136,7 @@ span.ch-newsfeed-userid, span.ch-comments-userid {
 
 span.ch-newsfeed-date {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 span.ch-comments-date {
@@ -104,7 +155,7 @@ div.ch-notification-wrapper {
     }
 }
 
-.ch-action-wrapper {
+.ch-notification-action-wrapper {
     padding: 5px 0;
     font-size: 12px;
     label {

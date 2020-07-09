@@ -3,6 +3,7 @@ import moment from 'moment'
 import ShowMore from 'react-show-more'
 import Comments from './Comments'
 import anonymousAvatar from '../../../assets/images/anonymous-avatar.png'
+import moreIcon from '../../../assets/images/icons/more.svg'
 
 const CommentSingle = ({ element = {}, userData = {} }) => {
   const [data, setData] = useState(element)
@@ -11,14 +12,14 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
     setData(element)
   }, [element])
   const insertComment = async (e, parentId, rootId) => {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13 && comment.trim().length > 0) {
       const payload = {
         id: null,
         rootId: rootId,
         parentId: parentId,
         type: 'newsFeedChildComment',
-        title: userData.userId,
-        summary: userData.name,
+        extraProperties: userData.userId,
+        title: userData.name,
         description: comment,
         status: 'active',
         deleted: 'false'
@@ -44,10 +45,15 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
     rootId,
     parentId,
     description,
-    extraProperties
+    summary
   }) => {
-    const parsedExtraProperties = JSON.parse(extraProperties) || {}
-    const likes = parsedExtraProperties.likes || []
+    let summaryProperties = {}
+    try {
+      summaryProperties = JSON.parse(summary) || {}
+    } catch (e) {
+      // do nothing
+    }
+    const likes = summaryProperties.likes || []
     // Prevent duplicate user inserts
     const filteredLikes = likes.filter((obj) => {
       return obj.userId !== userData.userId
@@ -61,7 +67,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
       rootId,
       parentId,
       description,
-      extraProperties: JSON.stringify({ likes: filteredLikes })
+      summary: JSON.stringify({ likes: filteredLikes })
     }
     console.log('like payload: ', payload)
     await crowdhound.update(this, payload)
@@ -77,18 +83,23 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
   }
 
   const notificationCounter = (element) => {
-    const extraProperties = JSON.parse(element.extraProperties) || {}
+    let summaryProperties = {}
+    try {
+      summaryProperties = JSON.parse(element.summary) || {}
+    } catch (e) {
+      // do nothing
+    }
     let totalLikes = 0
     let filteredUserLike = []
     const namesToolTip = []
-    if (extraProperties.likes) {
-      totalLikes = extraProperties.likes.length
+    if (summaryProperties.likes) {
+      totalLikes = summaryProperties.likes.length
       // Check if the current user already liked the comment
-      filteredUserLike = extraProperties.likes.filter((obj) => {
+      filteredUserLike = summaryProperties.likes.filter((obj) => {
         return obj.userId === userData.userId
       })
       // Collect all names who've liked the comment
-      extraProperties.likes.forEach((obj) => {
+      summaryProperties.likes.forEach((obj) => {
         namesToolTip.push(obj.name)
       })
     }
@@ -107,7 +118,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
             </span>
           )}
         </div>
-        <div className='ch-action-wrapper'>
+        <div className='ch-notification-action-wrapper'>
           <label
             onClick={() => likeComment(element)}
             className={filteredUserLike.length > 0 ? 'liked' : ''}
@@ -131,7 +142,16 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
   }
 
   return (
-    <div>
+    <div className='ch-comments-wrapper'>
+      <div className='ch-options-wrapper'>
+        <img className='ch-more-icon' src={moreIcon} />
+        <div className='ch-options-actions-wrapper'>
+          <div className='ch-options-actions'>
+            <span>Edit</span>
+            <span>Delete</span>
+          </div>
+        </div>
+      </div>
       <table className='ch-comments-maintable'>
         <tbody>
           <tr>
@@ -140,7 +160,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
             </td>
             <td className='ch-comments-right-cell'>
               <span className='ch-comments-userid'>
-                {data.summary ? data.summary : 'Unknown'}
+                {data.title ? data.title : 'Unknown'}
               </span>
               <span className='ch-comments-date'>
                 {dateFromNow(data.created)}

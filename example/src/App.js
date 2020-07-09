@@ -14,11 +14,13 @@ const options = {
 
 Crowdhound(options)
 
-const userData = { userId: 'cclara', name: 'Carlo Clara' }
+// const userData = { userId: 'cclara', name: 'Carlo Clara' }
+// const userData = { userId: 'wendell', name: 'Wendell Ramos' }
+const userData = { userId: 'jonsnow', name: 'Jon Snow' }
 
 const App = () => {
   return <div>    
-    <NewsFeed elementId="284014" userData={userData} />
+    <NewsFeed elementId="284772" userData={userData} />
   </div>
 }
 

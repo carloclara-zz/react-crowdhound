@@ -4,7 +4,6 @@ import './NewsFeed.scss'
 import anonymousAvatar from '../../assets/images/anonymous-avatar.png'
 
 export default ({ elementId, userData = {} }) => {
-  const [createdElement, setCreatedElement] = useState('')
   const [post, setPost] = useState('')
   const [element, setElement] = useState({})
 
@@ -12,33 +11,34 @@ export default ({ elementId, userData = {} }) => {
     if (post.trim().length > 0) {
       const payload = {
         id: null,
-        rootId: '$samplenewsfeed',
-        parentId: '$samplenewsfeed',
+        rootId: elementId,
+        parentId: elementId,
         type: 'newsFeed',
-        title: userData.userId,
-        summary: userData.name,
+        extraProperties: userData.userId,
+        title: userData.name,
         description: post,
-        status: 'active',
-        deleted: 'false'
+        status: 'active'
       }
-      const reply = await crowdhound.create(this, payload)
-      setCreatedElement(reply)
+      await crowdhound.create(this, payload)
       setPost('')
+      selectPost()
+    }
+  }
+
+  const selectPost = async () => {
+    const reply = await crowdhound.select(this, {
+      elementId,
+      withChildren: true,
+      status: 'active'
+    })
+    if (reply.elements[0]) {
+      setElement(reply.elements[0])
     }
   }
 
   useEffect(() => {
-    async function selectFunction() {
-      const reply = await crowdhound.select(this, {
-        elementId,
-        withChildren: true
-      })
-      if (reply.elements[0]) {
-        setElement(reply.elements[0])
-      }
-    }
-    selectFunction()
-  }, [createdElement])
+    selectPost()
+  }, [])
   return (
     <div id='app-ch-newsfeed'>
       <div className='ch-newsfeed-form-wrapper'>

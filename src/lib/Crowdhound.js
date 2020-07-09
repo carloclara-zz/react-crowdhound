@@ -569,7 +569,15 @@ class Contentservice {
         data: element
       })
         .then((response) => {
-          return resolve(response.data)
+          this.update(vm, {
+            id: response.data.elementId,
+            rootId: element.rootId,
+            parentId: element.parentId,
+            description: element.description,
+            status: element.status
+          }).then(() => {
+            return resolve('ok')
+          })
         })
         .catch((e) => {
           axiosError(vm, url, element, e)
