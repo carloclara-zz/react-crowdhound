@@ -1,44 +1,32 @@
-import React, { useEffect, useState, crowdhound } from 'react'
-import NewsFeedList from './NewsFeedList'
+import React, { useEffect, useState } from 'react'
+import Posts from './Posts'
+import { getContent, addContent } from '../../actions/content'
 import './NewsFeed.scss'
 import anonymousAvatar from '../../assets/images/anonymous-avatar.png'
 
-export default ({ elementId, userData = {} }) => {
+export default ({ anchorId, userData = {} }) => {
   const [post, setPost] = useState('')
   const [element, setElement] = useState({})
 
   const insertPost = async () => {
     if (post.trim().length > 0) {
-      const payload = {
-        id: null,
-        rootId: elementId,
-        parentId: elementId,
-        type: 'newsFeed',
-        extraProperties: userData.userId,
-        title: userData.name,
-        description: post,
-        status: 'active'
-      }
-      await crowdhound.create(this, payload)
+      await addContent(userData, anchorId, anchorId, post, `post-${anchorId}`)
       setPost('')
-      selectPost()
+      selectPosts()
     }
   }
 
-  const selectPost = async () => {
-    const reply = await crowdhound.select(this, {
-      elementId,
-      withChildren: true,
-      status: 'active'
-    })
-    if (reply.elements[0]) {
-      setElement(reply.elements[0])
+  const selectPosts = async () => {
+    const posts = await getContent(anchorId)
+    if (posts.elements[0]) {
+      setElement(posts.elements[0])
     }
   }
 
   useEffect(() => {
-    selectPost()
+    selectPosts()
   }, [])
+
   return (
     <div id='app-ch-newsfeed'>
       <div className='ch-newsfeed-form-wrapper'>
@@ -66,7 +54,7 @@ export default ({ elementId, userData = {} }) => {
         />
         <button onClick={insertPost}>POST</button>
       </div>
-      <NewsFeedList elements={element.children} userData={userData} />
+      <Posts elements={element.children} userData={userData} />
     </div>
   )
 }

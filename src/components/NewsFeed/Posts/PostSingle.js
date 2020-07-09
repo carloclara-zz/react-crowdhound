@@ -1,125 +1,56 @@
-import React, { useEffect, useState, crowdhound } from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import ShowMore from 'react-show-more'
-import Comments from './Comments'
-import anonymousAvatar from '../../assets/images/anonymous-avatar.png'
-import moreIcon from '../../assets/images/icons/more.svg'
+import Comments from '../Comments'
+import {
+  getContent,
+  addContent,
+  editContent,
+  deleteContent,
+  likeContent
+} from '../../../actions/content'
+import anonymousAvatar from '../../../assets/images/anonymous-avatar.png'
+import moreIcon from '../../../assets/images/icons/more.svg'
 
-const NewsFeedSingle = ({ element = {}, userData = {} }) => {
+const PostSingle = ({ element = {}, userData = {} }) => {
   const [data, setData] = useState(element)
   const [comment, setComment] = useState('')
-  const [showEditBox, setShowEdit] = useState(false)
-  const [editableComment, setEditableComment] = useState('')
+  const [showEditableTextBox, setShowEditableTextBox] = useState(false)
+  const [post, setPost] = useState('')
   useEffect(() => {
     setData(element)
   }, [element])
-  const insertComment = async (e, parentId) => {
+  const insertComment = async (e, { rootId, id }) => {
     if (e.keyCode === 13 && comment.trim().length > 0) {
-      const payload = {
-        id: null,
-        rootId: parentId,
-        parentId: parentId,
-        type: 'newsFeedComment',
-        extraProperties: userData.userId,
-        title: userData.name,
-        description: comment,
-        status: 'active',
-        deleted: 'false'
-      }
-      console.log('comment:', payload)
-      const createReponse = await crowdhound.create(this, payload)
-      console.log('createReponse:', createReponse)
-
-      const selectResponse = await crowdhound.select(this, {
-        elementId: parentId,
-        withChildren: true
-      })
-      console.log('selectResponse:', selectResponse)
-      if (selectResponse.elements[0]) {
-        setData(selectResponse.elements[0])
+      await addContent(userData, rootId, id, comment, `comment-${id}`)
+      const comments = await getContent(id)
+      if (comments.elements[0]) {
+        setData(comments.elements[0])
       }
       setComment('')
     }
   }
 
-  const updateComment = async (e, element) => {
-    if (e.keyCode === 13 && editableComment.trim().length > 0) {
-      const { id, rootId, parentId } = element
-      const payload = {
-        id,
-        rootId,
-        parentId,
-        description: editableComment
+  const updatePost = async (e, element) => {
+    if (e.keyCode === 13 && post.trim().length > 0) {
+      await editContent(element, post)
+      const posts = await getContent(element.id)
+      if (posts.elements[0]) {
+        setData(posts.elements[0])
       }
-      console.log('comment:', payload)
-      const updateReponse = await crowdhound.update(this, payload)
-      console.log('updateReponse:', updateReponse)
-
-      const selectResponse = await crowdhound.select(this, {
-        elementId: id,
-        withChildren: true
-      })
-      console.log('selectResponse:', selectResponse)
-      if (selectResponse.elements[0]) {
-        setData(selectResponse.elements[0])
-      }
-      setShowEdit(false)
+      setShowEditableTextBox(false)
     }
   }
 
-  const deleteComment = async ({ id, rootId, parentId, description }) => {
-    const payload = {
-      id,
-      rootId,
-      parentId,
-      description,
-      status: 'deleted',
-      deleted: 'true'
-    }
-    console.log('delete comment:', payload)
-    const updateReponse = await crowdhound.update(this, payload)
-    console.log('updateReponse:', updateReponse)
+  const deleteComment = async (element) => {
+    await deleteContent(element)
   }
 
-  const likeComment = async ({
-    id,
-    rootId,
-    parentId,
-    description,
-    summary
-  }) => {
-    let summaryProperties = {}
-    try {
-      summaryProperties = JSON.parse(summary) || {}
-    } catch (e) {
-      // do nothing
-    }
-    const likes = summaryProperties.likes || []
-    // Prevent duplicate user inserts
-    const filteredLikes = likes.filter((obj) => {
-      return obj.userId !== userData.userId
-    })
-    // Insert new object if is not existing in the 'likes' array
-    if (likes.length === filteredLikes.length) {
-      filteredLikes.push({ userId: userData.userId, name: userData.name })
-    }
-    const payload = {
-      id,
-      rootId,
-      parentId,
-      description,
-      summary: JSON.stringify({ likes: filteredLikes })
-    }
-    console.log('like payload: ', payload)
-    await crowdhound.update(this, payload)
-
-    const selectResponse = await crowdhound.select(this, {
-      elementId: id,
-      withChildren: true
-    })
-    console.log('selectResponse:', selectResponse)
-    if (selectResponse.elements[0]) {
-      setData(selectResponse.elements[0])
+  const likeComment = async (elementId) => {
+    await likeContent(userData, elementId)
+    const posts = await getContent(element.id)
+    if (posts.elements[0]) {
+      setData(posts.elements[0])
     }
   }
 
@@ -172,22 +103,18 @@ const NewsFeedSingle = ({ element = {}, userData = {} }) => {
     )
   }
 
-  const dateFromNow = (date) => {
-    return moment(date * 1000).fromNow()
-  }
-
   return (
     <div className='ch-newsfeed-main-wrapper'>
       <div className='ch-newsfeed-wrapper'>
-        {userData.userId === data.title && (
+        {userData.userId === data.extraProperties && (
           <div className='ch-options-wrapper'>
             <img className='ch-more-icon' src={moreIcon} />
             <div className='ch-options-actions-wrapper'>
               <div className='ch-options-actions'>
                 <span
                   onClick={() => {
-                    setShowEdit(true)
-                    setEditableComment(data.description)
+                    setShowEditableTextBox(true)
+                    setPost(data.description)
                   }}
                 >
                   Edit
@@ -214,34 +141,34 @@ const NewsFeedSingle = ({ element = {}, userData = {} }) => {
                   {data.title ? data.title : 'Unknown'}
                 </span>
                 <span className='ch-newsfeed-date'>
-                  {dateFromNow(data.created)}
+                  {moment(data.created * 1000).fromNow()}
                 </span>
               </td>
             </tr>
           </tbody>
         </table>
         <div className='ch-newsfeed-description'>
-          {showEditBox && (
+          {showEditableTextBox && (
             <div className='ch-editable-comments-wrapper'>
               <input
                 type='text'
                 className='ch-comments-textbox'
-                value={editableComment}
-                onKeyUp={(e) => updateComment(e, data)}
+                value={post}
+                onKeyUp={(e) => updatePost(e, data)}
                 onChange={(e) => {
-                  setEditableComment(e.target.value)
+                  setPost(e.target.value)
                 }}
               />
               <button
                 onClick={() => {
-                  setShowEdit(false)
+                  setShowEditableTextBox(false)
                 }}
               >
                 Cancel
               </button>
             </div>
           )}
-          {!showEditBox && (
+          {!showEditableTextBox && (
             <ShowMore
               lines={3}
               more='See More'
@@ -267,7 +194,7 @@ const NewsFeedSingle = ({ element = {}, userData = {} }) => {
                   type='text'
                   placeholder='Write a comment...'
                   value={comment}
-                  onKeyUp={(e) => insertComment(e, data.id)}
+                  onKeyUp={(e) => insertComment(e, data)}
                   onChange={(e) => {
                     setComment(e.target.value)
                   }}
@@ -281,4 +208,4 @@ const NewsFeedSingle = ({ element = {}, userData = {} }) => {
   )
 }
 
-export default NewsFeedSingle
+export default PostSingle
