@@ -4,7 +4,8 @@ const NotificationCounter = ({
   element = {},
   userData = {},
   label = 'Reply',
-  likeComment
+  likeComment,
+  showReplyTextBox = () => {}
 }) => {
   let likesProperties = {}
   try {
@@ -48,7 +49,14 @@ const NotificationCounter = ({
         >
           Like
         </label>
-        <label htmlFor={element.id}>{label}</label>
+        <label
+          htmlFor={element.id}
+          onClick={() => {
+            showReplyTextBox(true)
+          }}
+        >
+          {label}
+        </label>
       </div>
     </div>
   )

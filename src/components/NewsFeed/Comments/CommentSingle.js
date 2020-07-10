@@ -20,6 +20,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
   const [comment, setComment] = useState('')
   const [showEditableTextBox, setShowEditableTextBox] = useState(false)
   const [editedComment, setEditedComment] = useState('')
+  const [showReplyTextBox, setShowReplyTextBox] = useState(false)
 
   useEffect(() => {
     setData(element)
@@ -126,18 +127,26 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
                 likeComment={(e) => {
                   likeComment(e)
                 }}
+                showReplyTextBox={() => {
+                  setShowReplyTextBox(true)
+                }}
               />
               <Comments elements={data.children} userData={userData} />
-              <WriteComment
-                element={data}
-                comment={comment}
-                setComment={(e) => {
-                  setComment(e)
-                }}
-                insertComment={(e, el) => {
-                  insertComment(e, el)
-                }}
-              />
+              {showReplyTextBox && (
+                <WriteComment
+                  element={data}
+                  comment={comment}
+                  setComment={(e) => {
+                    setComment(e)
+                  }}
+                  insertComment={(e, el) => {
+                    insertComment(e, el)
+                  }}
+                  showReplyTextBox={() => {
+                    setShowReplyTextBox(false)
+                  }}
+                />
+              )}
             </td>
           </tr>
         </tbody>

@@ -5,7 +5,8 @@ const WriteComment = ({
   element = {},
   comment = '',
   setComment,
-  insertComment
+  insertComment,
+  showReplyTextBox = () => {}
 }) => {
   return (
     <table className='ch-comments-maintable'>
@@ -24,6 +25,11 @@ const WriteComment = ({
               onKeyUp={(e) => insertComment(e, element)}
               onChange={(e) => {
                 setComment(e.target.value)
+              }}
+              onBlur={() => {
+                setTimeout(() => {
+                  showReplyTextBox()
+                }, 200)
               }}
             />
           </td>
