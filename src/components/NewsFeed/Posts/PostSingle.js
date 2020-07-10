@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import ShowMore from 'react-show-more'
 import Comments from '../Comments'
+import MoreActions from '../MoreActions'
+import NotificationCounter from '../NotificationCounter'
+import WriteComment from '../WriteComment'
 import {
   getContent,
   addContent,
@@ -10,16 +13,17 @@ import {
   likeContent
 } from '../../../actions/content'
 import anonymousAvatar from '../../../assets/images/anonymous-avatar.png'
-import moreIcon from '../../../assets/images/icons/more.svg'
 
 const PostSingle = ({ element = {}, userData = {} }) => {
   const [data, setData] = useState(element)
   const [comment, setComment] = useState('')
   const [showEditableTextBox, setShowEditableTextBox] = useState(false)
   const [post, setPost] = useState('')
+
   useEffect(() => {
     setData(element)
   }, [element])
+
   const insertComment = async (e, { rootId, id }) => {
     if (e.keyCode === 13 && comment.trim().length > 0) {
       await addContent(userData, rootId, id, comment, `comment-${id}`)
@@ -54,81 +58,22 @@ const PostSingle = ({ element = {}, userData = {} }) => {
     }
   }
 
-  const notificationCounter = (element) => {
-    let summaryProperties = {}
-    try {
-      summaryProperties = JSON.parse(element.summary) || {}
-    } catch (e) {
-      // do nothing
-    }
-    let totalLikes = 0
-    let filteredUserLike = []
-    const namesToolTip = []
-    if (summaryProperties.likes) {
-      totalLikes = summaryProperties.likes.length
-      // Check if the current user already liked the comment
-      filteredUserLike = summaryProperties.likes.filter((obj) => {
-        return obj.userId === userData.userId
-      })
-      // Collect all names who've liked the comment
-      summaryProperties.likes.forEach((obj) => {
-        namesToolTip.push(obj.name)
-      })
-    }
-    const totalComments = element.children.length
-    return (
-      <div>
-        <div className='ch-notification-wrapper'>
-          {totalLikes > 0 && (
-            <span title={namesToolTip.join()}>
-              {totalLikes} {totalLikes > 1 ? 'Likes' : 'Like'}
-            </span>
-          )}
-          {totalComments > 0 && (
-            <span>
-              {totalComments} {totalComments > 1 ? 'Comments' : 'Comment'}
-            </span>
-          )}
-        </div>
-        <div className='ch-notification-action-wrapper'>
-          <label
-            onClick={() => likeComment(element)}
-            className={filteredUserLike.length > 0 ? 'liked' : ''}
-          >
-            Like
-          </label>
-          <label htmlFor={element.id}>Comment</label>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className='ch-newsfeed-main-wrapper'>
       <div className='ch-newsfeed-wrapper'>
         {userData.userId === data.extraProperties && (
-          <div className='ch-options-wrapper'>
-            <img className='ch-more-icon' src={moreIcon} />
-            <div className='ch-options-actions-wrapper'>
-              <div className='ch-options-actions'>
-                <span
-                  onClick={() => {
-                    setShowEditableTextBox(true)
-                    setPost(data.description)
-                  }}
-                >
-                  Edit
-                </span>
-                <span
-                  onClick={() => {
-                    deleteComment(data)
-                  }}
-                >
-                  Delete
-                </span>
-              </div>
-            </div>
-          </div>
+          <MoreActions
+            element={data}
+            showEditableTextBox={(e) => {
+              setShowEditableTextBox(e)
+            }}
+            setDescription={(e) => {
+              setPost(e)
+            }}
+            deleteComment={(e) => {
+              deleteComment(e)
+            }}
+          />
         )}
         <table className='ch-newsfeed-maintable'>
           <tbody>
@@ -179,30 +124,26 @@ const PostSingle = ({ element = {}, userData = {} }) => {
             </ShowMore>
           )}
         </div>
-        {notificationCounter(data)}
+        <NotificationCounter
+          element={data}
+          userData={userData}
+          htmlFor={data.id}
+          label='Comment'
+          likeComment={(e) => {
+            likeComment(e)
+          }}
+        />
         <Comments elements={data.children} userData={userData} />
-        <table className='ch-comments-maintable'>
-          <tbody>
-            <tr>
-              <td className='ch-comments-left-cell'>
-                <img className='ch-comments-avatar' src={anonymousAvatar} />
-              </td>
-              <td className='ch-comments-right-cell'>
-                <input
-                  id={data.id}
-                  className='ch-comments-textbox'
-                  type='text'
-                  placeholder='Write a comment...'
-                  value={comment}
-                  onKeyUp={(e) => insertComment(e, data)}
-                  onChange={(e) => {
-                    setComment(e.target.value)
-                  }}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <WriteComment
+          element={data}
+          comment={comment}
+          setComment={(e) => {
+            setComment(e)
+          }}
+          insertComment={(e, el) => {
+            insertComment(e, el)
+          }}
+        />
       </div>
     </div>
   )

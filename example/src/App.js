@@ -1,5 +1,4 @@
 import React from 'react'
-
 import Crowdhound, { NewsFeed } from 'react-crowdhound'
 import 'react-crowdhound/dist/index.css'
 
@@ -14,8 +13,8 @@ const options = {
 
 Crowdhound(options)
 
-// const userData = { userId: 'cclara', name: 'Carlo Clara' }
-const userData = { userId: 'wendell', name: 'Wendell Ramos' }
+const userData = { userId: 'cclara', name: 'Carlo Clara' }
+// const userData = { userId: 'wendell', name: 'Wendell Ramos' }
 // const userData = { userId: 'jonsnow', name: 'Jon Snow' }
 
 const App = () => {
