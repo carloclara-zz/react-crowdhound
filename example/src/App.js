@@ -13,9 +13,9 @@ const options = {
 
 Crowdhound(options)
 
-const userData = { userId: 'cclara', name: 'Carlo Clara' }
-// const userData = { userId: 'wendell', name: 'Wendell Ramos' }
-// const userData = { userId: 'jonsnow', name: 'Jon Snow' }
+// const userData = { userId: 'cclara', name: 'Carlo Clara' }
+// const userData = { userId: 'rssibug', name: 'Rs Sibug' }
+const userData = { userId: 'jonsnow', name: 'Jon Snow' }
 
 const App = () => {
   return <div>    

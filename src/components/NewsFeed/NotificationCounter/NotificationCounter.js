@@ -3,27 +3,26 @@ import React from 'react'
 const NotificationCounter = ({
   element = {},
   userData = {},
-  htmlFor = '',
   label = 'Reply',
   likeComment
 }) => {
-  let summaryProperties = {}
+  let likesProperties = {}
   try {
-    summaryProperties = JSON.parse(element.summary) || {}
+    likesProperties = JSON.parse(element.extraProperties) || {}
   } catch (e) {
     // do nothing
   }
   let totalLikes = 0
   let filteredUserLike = []
   const namesToolTip = []
-  if (summaryProperties.likes) {
-    totalLikes = summaryProperties.likes.length
+  if (likesProperties.likes) {
+    totalLikes = likesProperties.likes.length
     // Check if the current user already liked the comment
-    filteredUserLike = summaryProperties.likes.filter((obj) => {
+    filteredUserLike = likesProperties.likes.filter((obj) => {
       return obj.userId === userData.userId
     })
     // Collect all names who've liked the comment
-    summaryProperties.likes.forEach((obj) => {
+    likesProperties.likes.forEach((obj) => {
       namesToolTip.push(obj.name)
     })
   }
@@ -49,7 +48,7 @@ const NotificationCounter = ({
         >
           Like
         </label>
-        <label htmlFor={htmlFor}>{label}</label>
+        <label htmlFor={element.id}>{label}</label>
       </div>
     </div>
   )

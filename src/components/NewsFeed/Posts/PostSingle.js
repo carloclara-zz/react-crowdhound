@@ -5,6 +5,7 @@ import Comments from '../Comments'
 import MoreActions from '../MoreActions'
 import NotificationCounter from '../NotificationCounter'
 import WriteComment from '../WriteComment'
+import { stringPattern } from '../../../helpers/Commons'
 import {
   getContent,
   addContent,
@@ -61,7 +62,7 @@ const PostSingle = ({ element = {}, userData = {} }) => {
   return (
     <div className='ch-newsfeed-main-wrapper'>
       <div className='ch-newsfeed-wrapper'>
-        {userData.userId === data.extraProperties && (
+        {stringPattern(userData.userId) === data.title && (
           <MoreActions
             element={data}
             showEditableTextBox={(e) => {
@@ -83,7 +84,7 @@ const PostSingle = ({ element = {}, userData = {} }) => {
               </td>
               <td className='ch-newsfeed-right-cell'>
                 <span className='ch-newsfeed-userid'>
-                  {data.title ? data.title : 'Unknown'}
+                  {data.summary ? data.summary : 'Unknown'}
                 </span>
                 <span className='ch-newsfeed-date'>
                   {moment(data.created * 1000).fromNow()}
@@ -127,7 +128,6 @@ const PostSingle = ({ element = {}, userData = {} }) => {
         <NotificationCounter
           element={data}
           userData={userData}
-          htmlFor={data.id}
           label='Comment'
           likeComment={(e) => {
             likeComment(e)

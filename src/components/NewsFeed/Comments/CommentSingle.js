@@ -5,6 +5,7 @@ import Comments from './Comments'
 import MoreActions from '../MoreActions'
 import NotificationCounter from '../NotificationCounter'
 import WriteComment from '../WriteComment'
+import { stringPattern } from '../../../helpers/Commons'
 import {
   getContent,
   addContent,
@@ -26,7 +27,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
 
   const insertComment = async (e, { rootId, id }) => {
     if (e.keyCode === 13 && comment.trim().length > 0) {
-      await addContent(userData, rootId, id, comment, `child-comment-${id}`)
+      await addContent(userData, rootId, id, comment, `comment-${id}`)
       const comments = await getContent(id)
       if (comments.elements[0]) {
         setData(comments.elements[0])
@@ -58,14 +59,9 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
     }
   }
 
-  // prevent user to write comment on the child comment
-  const showWriteAComment = (typeValue) => {
-    return typeValue.indexOf('child-comment') === -1
-  }
-
   return (
     <div className='ch-comments-wrapper'>
-      {userData.userId === data.extraProperties && (
+      {stringPattern(userData.userId) === data.title && (
         <MoreActions
           element={data}
           showEditableTextBox={(e) => {
@@ -87,7 +83,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
             </td>
             <td className='ch-comments-right-cell'>
               <span className='ch-comments-userid'>
-                {data.title ? data.title : 'Unknown'}
+                {data.summary ? data.summary : 'Unknown'}
               </span>
               <span className='ch-comments-date'>
                 {moment(data.created * 1000).fromNow()}
@@ -127,26 +123,21 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
               <NotificationCounter
                 element={data}
                 userData={userData}
-                htmlFor={
-                  showWriteAComment(data.type) ? element.id : element.parentId
-                }
                 likeComment={(e) => {
                   likeComment(e)
                 }}
               />
               <Comments elements={data.children} userData={userData} />
-              {showWriteAComment(data.type) && (
-                <WriteComment
-                  element={data}
-                  comment={comment}
-                  setComment={(e) => {
-                    setComment(e)
-                  }}
-                  insertComment={(e, el) => {
-                    insertComment(e, el)
-                  }}
-                />
-              )}
+              <WriteComment
+                element={data}
+                comment={comment}
+                setComment={(e) => {
+                  setComment(e)
+                }}
+                insertComment={(e, el) => {
+                  insertComment(e, el)
+                }}
+              />
             </td>
           </tr>
         </tbody>

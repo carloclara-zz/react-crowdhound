@@ -1,4 +1,5 @@
 import { crowdhound } from 'react'
+import { stringPattern } from '../helpers/Commons'
 
 export const getContent = async (elementId) => {
   try {
@@ -27,8 +28,8 @@ export const addContent = async (
       rootId,
       parentId,
       type,
-      extraProperties: userData.userId,
-      title: userData.name,
+      title: stringPattern(userData.userId),
+      summary: userData.name,
       description,
       status: 'active'
     }
@@ -75,14 +76,14 @@ export const deleteContent = async (element) => {
 
 export const likeContent = async (userData, element) => {
   try {
-    const { id, rootId, parentId, description, summary } = element
-    let summaryProperties = {}
+    const { id, rootId, parentId, description, extraProperties } = element
+    let likesProperties = {}
     try {
-      summaryProperties = JSON.parse(summary) || {}
+      likesProperties = JSON.parse(extraProperties) || {}
     } catch (e) {
       // do nothing
     }
-    const likes = summaryProperties.likes || []
+    const likes = likesProperties.likes || []
     // Prevent duplicate user inserts
     const filteredLikes = likes.filter((obj) => {
       return obj.userId !== userData.userId
@@ -96,7 +97,7 @@ export const likeContent = async (userData, element) => {
       rootId,
       parentId,
       description,
-      summary: JSON.stringify({ likes: filteredLikes })
+      extraProperties: JSON.stringify({ likes: filteredLikes })
     }
     await crowdhound.update(this, payload)
   } catch (error) {

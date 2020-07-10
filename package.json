@@ -55,7 +55,6 @@
     "axios": "^0.19.2",
     "moment": "^2.27.0",
     "query-string": "^6.13.1",
-    "react-global-configuration": "^1.4.0",
     "react-show-more": "^2.0.0"
   }
 }
