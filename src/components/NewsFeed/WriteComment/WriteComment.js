@@ -3,25 +3,32 @@ import anonymousAvatar from '../../../assets/images/anonymous-avatar.png'
 
 const WriteComment = ({
   element = {},
+  styles = {},
   comment = '',
   setComment,
   insertComment,
   showReplyTextBox = () => {}
 }) => {
+  const { secondaryAvatarStyle, commentInputStyle } = styles
   return (
-    <table className='ch-comments-maintable'>
+    <table className='ch-news-feed-comment-table'>
       <tbody>
         <tr>
-          <td className='ch-comments-left-cell'>
-            <img className='ch-comments-avatar' src={anonymousAvatar} />
+          <td className='left-cell'>
+            <img
+              className='ch-news-feed-secondary-avatar'
+              src={anonymousAvatar}
+              style={{ ...secondaryAvatarStyle }}
+            />
           </td>
-          <td className='ch-comments-right-cell'>
+          <td className='right-cell'>
             <input
               id={element.id}
-              className='ch-comments-textbox'
+              className='ch-news-feed-write-comments-text-box'
               type='text'
               placeholder='Write a comment...'
               value={comment}
+              style={{ ...commentInputStyle }}
               onKeyUp={(e) => insertComment(e, element)}
               onChange={(e) => {
                 setComment(e.target.value)

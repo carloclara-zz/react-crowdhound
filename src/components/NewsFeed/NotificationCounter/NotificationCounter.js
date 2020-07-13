@@ -3,10 +3,12 @@ import React from 'react'
 const NotificationCounter = ({
   element = {},
   userData = {},
+  styles = {},
   label = 'Reply',
   likeComment,
   showReplyTextBox = () => {}
 }) => {
+  const { likedStyle } = styles
   let likesProperties = {}
   try {
     likesProperties = JSON.parse(element.extraProperties) || {}
@@ -30,7 +32,7 @@ const NotificationCounter = ({
   const totalComments = element.children.length
   return (
     <div>
-      <div className='ch-notification-wrapper'>
+      <div className='ch-news-feed-notification-wrapper'>
         {totalLikes > 0 && (
           <span title={namesToolTip.join()}>
             {totalLikes} {totalLikes > 1 ? 'Likes' : 'Like'}
@@ -42,10 +44,11 @@ const NotificationCounter = ({
           </span>
         )}
       </div>
-      <div className='ch-notification-action-wrapper'>
+      <div className='ch-news-feed-notification-action-wrapper'>
         <label
           onClick={() => likeComment(element)}
           className={filteredUserLike.length > 0 ? 'liked' : ''}
+          style={filteredUserLike.length > 0 ? { ...likedStyle } : {}}
         >
           Like
         </label>

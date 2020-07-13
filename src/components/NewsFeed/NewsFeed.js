@@ -4,7 +4,14 @@ import { getContent, addContent } from '../../actions/content'
 import './NewsFeed.scss'
 import anonymousAvatar from '../../assets/images/anonymous-avatar.png'
 
-export default ({ anchorId, userData = {} }) => {
+export default ({ anchorId, userData = {}, styles = {} }) => {
+  const {
+    appBodyStyle,
+    formWrapperStyle,
+    formTextAreaStyle,
+    buttonStyle
+  } = styles
+  const { primaryAvatarStyle } = styles
   const [post, setPost] = useState('')
   const [element, setElement] = useState({})
 
@@ -28,16 +35,23 @@ export default ({ anchorId, userData = {} }) => {
   }, [])
 
   return (
-    <div id='app-ch-newsfeed'>
-      <div className='ch-newsfeed-form-wrapper'>
-        <table className='ch-newsfeed-maintable'>
+    <div id='app-ch-news-feed' style={{ ...appBodyStyle }}>
+      <div
+        className='ch-news-feed-form-wrapper'
+        style={{ ...formWrapperStyle }}
+      >
+        <table className='ch-news-feed-main-table'>
           <tbody>
             <tr>
-              <td className='ch-newsfeed-left-cell'>
-                <img className='ch-newsfeed-avatar' src={anonymousAvatar} />
+              <td className='left-cell'>
+                <img
+                  className='ch-news-feed-primary-avatar'
+                  style={{ ...primaryAvatarStyle }}
+                  src={anonymousAvatar}
+                />
               </td>
-              <td className='ch-newsfeed-right-cell'>
-                <span className='ch-newsfeed-userid'>
+              <td className='right-cell'>
+                <span className='ch-news-feed-element-user-id'>
                   {userData.name ? userData.name : 'Unknown'}
                 </span>
               </td>
@@ -45,16 +59,19 @@ export default ({ anchorId, userData = {} }) => {
           </tbody>
         </table>
         <textarea
-          className='ch-newsfeed-post-textarea'
+          className='ch-news-feed-post-textarea'
           placeholder={`What's on your mind?`}
           value={post}
+          style={{ ...formTextAreaStyle }}
           onChange={(e) => {
             setPost(e.target.value)
           }}
         />
-        <button onClick={insertPost}>POST</button>
+        <button style={{ ...buttonStyle }} onClick={insertPost}>
+          POST
+        </button>
       </div>
-      <Posts elements={element.children} userData={userData} />
+      <Posts elements={element.children} userData={userData} styles={styles} />
     </div>
   )
 }

@@ -15,7 +15,14 @@ import {
 } from '../../../actions/content'
 import anonymousAvatar from '../../../assets/images/anonymous-avatar.png'
 
-const PostSingle = ({ element = {}, userData = {} }) => {
+const PostSingle = ({ element = {}, userData = {}, styles = {} }) => {
+  const {
+    primaryAvatarStyle,
+    postUsernameStyle,
+    postDateStyle,
+    postDescriptionStyle,
+    commentInputStyle
+  } = styles
   const [data, setData] = useState(element)
   const [comment, setComment] = useState('')
   const [showEditableTextBox, setShowEditableTextBox] = useState(false)
@@ -60,8 +67,8 @@ const PostSingle = ({ element = {}, userData = {} }) => {
   }
 
   return (
-    <div className='ch-newsfeed-main-wrapper'>
-      <div className='ch-newsfeed-wrapper'>
+    <div className='ch-news-feed-post-wrapper'>
+      <div className='ch-news-feed-content-wrapper'>
         {stringPattern(userData.userId) === data.title && (
           <MoreActions
             element={data}
@@ -76,30 +83,44 @@ const PostSingle = ({ element = {}, userData = {} }) => {
             }}
           />
         )}
-        <table className='ch-newsfeed-maintable'>
+        <table className='ch-news-feed-main-table'>
           <tbody>
             <tr>
-              <td className='ch-newsfeed-left-cell'>
-                <img className='ch-newsfeed-avatar' src={anonymousAvatar} />
+              <td className='left-cell'>
+                <img
+                  className='ch-news-feed-primary-avatar'
+                  style={{ ...primaryAvatarStyle }}
+                  src={anonymousAvatar}
+                />
               </td>
-              <td className='ch-newsfeed-right-cell'>
-                <span className='ch-newsfeed-userid'>
+              <td className='right-cell'>
+                <span
+                  className='ch-news-feed-element-user-id'
+                  style={{ ...postUsernameStyle }}
+                >
                   {data.summary ? data.summary : 'Unknown'}
                 </span>
-                <span className='ch-newsfeed-date'>
+                <span
+                  className='ch-news-feed-element-date'
+                  style={{ ...postDateStyle }}
+                >
                   {moment(data.created * 1000).fromNow()}
                 </span>
               </td>
             </tr>
           </tbody>
         </table>
-        <div className='ch-newsfeed-description'>
+        <div
+          className='ch-news-feed-element-description'
+          style={{ ...postDescriptionStyle }}
+        >
           {showEditableTextBox && (
-            <div className='ch-editable-comments-wrapper'>
+            <div className='ch-news-feed-editable-comment-wrapper'>
               <input
                 type='text'
-                className='ch-comments-textbox'
+                className='ch-news-feed-write-comments-text-box'
                 value={post}
+                style={{ ...commentInputStyle }}
                 onKeyUp={(e) => updatePost(e, data)}
                 onChange={(e) => {
                   setPost(e.target.value)
@@ -119,7 +140,7 @@ const PostSingle = ({ element = {}, userData = {} }) => {
               lines={3}
               more='See More'
               less='See Less'
-              anchorClass='ch-see-more-content'
+              anchorClass='ch-news-feed-see-more-description'
             >
               <p>{data.description}</p>
             </ShowMore>
@@ -132,8 +153,13 @@ const PostSingle = ({ element = {}, userData = {} }) => {
           likeComment={(e) => {
             likeComment(e)
           }}
+          styles={styles}
         />
-        <Comments elements={data.children} userData={userData} />
+        <Comments
+          elements={data.children}
+          userData={userData}
+          styles={styles}
+        />
         <WriteComment
           element={data}
           comment={comment}
@@ -143,6 +169,7 @@ const PostSingle = ({ element = {}, userData = {} }) => {
           insertComment={(e, el) => {
             insertComment(e, el)
           }}
+          styles={styles}
         />
       </div>
     </div>

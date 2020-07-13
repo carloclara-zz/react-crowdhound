@@ -1,4 +1,4 @@
-#app-ch-newsfeed {
+#app-ch-news-feed {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
 	color: #2e2d2d;
 	-webkit-font-smoothing: antialiased;
@@ -7,13 +7,13 @@
     background-color:#E3E5E6;
 }
 
-.ch-newsfeed-form-wrapper {
+.ch-news-feed-form-wrapper {
     background-color: #ffffff;
     padding: 10px;
     margin-bottom: 10px;
 }
 
-.ch-newsfeed-post-textarea {
+.ch-news-feed-post-textarea {
     border: 1px solid #ccd0d5;
     background-color: #f2f3f5;
     width: 100%;
@@ -25,55 +25,37 @@
     box-sizing: border-box;
 }
 
-.ch-editable-comments-wrapper {
-    text-align: right;
-    button {
-        margin-top: 5px;
-        cursor: pointer;
-    }
-}
-
-.ch-newsfeed-main-wrapper {
+.ch-news-feed-post-wrapper {
     padding: 10px;
     background-color: #ffffff;
     margin-bottom: 10px;
 }
 
-.ch-newsfeed-wrapper, .ch-comments-wrapper {   
+.ch-news-feed-content-wrapper {   
     position: relative;
 }
 
-.ch-comments-textbox {
-    font-size: 12px;
-    border: 1px solid #ccd0d5;
-    background-color: #f2f3f5;
-    width: 100%;
-    padding: 5px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-div.ch-options-wrapper {
+.ch-news-feed-more-options-wrapper {
     position: absolute;
     top: 10px;
     right: 10px;
-    img.ch-more-icon {
+    img.more-options-icon {
         height: 15px;
         width: 20px;
         cursor: pointer;
     }
-    div.ch-options-actions-wrapper {
+    div.more-options-action-wrapper {
         position: relative;
         visibility: hidden;
     }
-    div.ch-options-actions {
+    div.more-options-action {
         position: absolute;
         top: -7px;
         right: 1px;
         border: 1px solid #ccd0d5;
         background-color: #F2F3F5;
         span {
+            width: 60px;
             font-size: 12px;
             font-weight: 600;
             color: #7b7b7b;
@@ -88,64 +70,54 @@ div.ch-options-wrapper {
     }
 }
 
-div.ch-options-wrapper:hover {
-    div.ch-options-actions-wrapper {
+div.ch-news-feed-more-options-wrapper:hover {
+    div.more-options-action-wrapper {
         visibility: visible;
     }
 }
 
-.ch-newsfeed-maintable, .ch-comments-maintable {
+.ch-news-feed-main-table {
     width: 100%;
-    .ch-newsfeed-left-cell {
+    .left-cell {
         width: 45px;
     }
-    .ch-comments-left-cell {
+    .right-cell {
+        text-align: left;
+        vertical-align: middle;
+    }
+}
+
+.ch-news-feed-comment-table {
+    width: 100%;
+    .left-cell {
         width: 35px;
         vertical-align: top;
     }
-    .ch-newsfeed-right-cell, .ch-comments-right-cell {
+    .right-cell {
         text-align: left;
         vertical-align: middle;
     }    
 }
 
-.ch-newsfeed-description, .ch-comments-description {
-    font-size: 12px;
-    text-align: justify;
-    margin: 0;
-    p {
-        margin: 0;
+.ch-news-feed-editable-comment-wrapper {
+    text-align: right;
+    button {
+        margin-top: 5px;
+        cursor: pointer;
     }
 }
 
-img.ch-newsfeed-avatar {
+img.ch-news-feed-primary-avatar {
     height: 40px;
     width: 40px;
 }
 
-img.ch-comments-avatar {
+img.ch-news-feed-secondary-avatar {
     height: 30px;
     width: 30px;
 }
 
-span.ch-newsfeed-userid, span.ch-comments-userid {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-span.ch-newsfeed-date {
-    display: block;
-    font-size: 11px;
-}
-
-span.ch-comments-date {
-    display: block;
-    font-size: 11px;
-    margin-bottom: 5px;
-}
-
-div.ch-notification-wrapper {
+.ch-news-feed-notification-wrapper {
     margin-top: 5px;
     font-size: 12px;
     span {
@@ -155,7 +127,7 @@ div.ch-notification-wrapper {
     }
 }
 
-.ch-notification-action-wrapper {
+.ch-news-feed-notification-action-wrapper {
     padding: 5px 0;
     font-size: 12px;
     label {
@@ -169,7 +141,38 @@ div.ch-notification-wrapper {
     }
 }
 
-a.ch-see-more-content {
+span.ch-news-feed-element-user-id {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+span.ch-news-feed-element-date {
+    display: block;
+    font-size: 11px;
+}
+
+.ch-news-feed-element-description {
+    font-size: 12px;
+    text-align: justify;
+    margin: 0;
+    p {
+        margin: 0;
+    }
+}
+
+a.ch-news-feed-see-more-description {
     text-decoration: none;
     color: #8a8a8a;
+}
+
+.ch-news-feed-write-comments-text-box {
+    font-size: 12px;
+    border: 1px solid #ccd0d5;
+    background-color: #f2f3f5;
+    width: 100%;
+    padding: 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }

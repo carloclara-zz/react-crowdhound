@@ -15,7 +15,15 @@ import {
 } from '../../../actions/content'
 import anonymousAvatar from '../../../assets/images/anonymous-avatar.png'
 
-const CommentSingle = ({ element = {}, userData = {} }) => {
+const CommentSingle = ({ element = {}, userData = {}, styles = {} }) => {
+  const {
+    secondaryAvatarStyle,
+    buttonStyle,
+    commentUsernameStyle,
+    commentDateStyle,
+    commentDescriptionStyle,
+    commentInputStyle
+  } = styles
   const [data, setData] = useState(element)
   const [comment, setComment] = useState('')
   const [showEditableTextBox, setShowEditableTextBox] = useState(false)
@@ -61,7 +69,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
   }
 
   return (
-    <div className='ch-comments-wrapper'>
+    <div className='ch-news-feed-content-wrapper'>
       {stringPattern(userData.userId) === data.title && (
         <MoreActions
           element={data}
@@ -76,26 +84,40 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
           }}
         />
       )}
-      <table className='ch-comments-maintable'>
+      <table className='ch-news-feed-comment-table'>
         <tbody>
           <tr>
-            <td className='ch-comments-left-cell'>
-              <img className='ch-comments-avatar' src={anonymousAvatar} />
+            <td className='left-cell'>
+              <img
+                className='ch-news-feed-secondary-avatar'
+                style={{ ...secondaryAvatarStyle }}
+                src={anonymousAvatar}
+              />
             </td>
-            <td className='ch-comments-right-cell'>
-              <span className='ch-comments-userid'>
+            <td className='right-cell'>
+              <span
+                className='ch-news-feed-element-user-id'
+                style={{ ...commentUsernameStyle }}
+              >
                 {data.summary ? data.summary : 'Unknown'}
               </span>
-              <span className='ch-comments-date'>
+              <span
+                className='ch-news-feed-element-date'
+                style={{ ...commentDateStyle }}
+              >
                 {moment(data.created * 1000).fromNow()}
               </span>
-              <div className='ch-comments-description'>
+              <div
+                className='ch-news-feed-element-description'
+                style={{ ...commentDescriptionStyle }}
+              >
                 {showEditableTextBox && (
-                  <div className='ch-editable-comments-wrapper'>
+                  <div className='ch-news-feed-editable-comment-wrapper'>
                     <input
                       type='text'
-                      className='ch-comments-textbox'
+                      className='ch-news-feed-write-comments-text-box'
                       value={editedComment}
+                      style={{ ...commentInputStyle }}
                       onKeyUp={(e) => updateComment(e, data)}
                       onChange={(e) => {
                         setEditedComment(e.target.value)
@@ -105,6 +127,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
                       onClick={() => {
                         setShowEditableTextBox(false)
                       }}
+                      style={{ ...buttonStyle }}
                     >
                       Cancel
                     </button>
@@ -115,7 +138,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
                     lines={3}
                     more='See More'
                     less='See Less'
-                    anchorClass='ch-see-more-content'
+                    anchorClass='ch-news-feed-see-more-description'
                   >
                     <p>{data.description}</p>
                   </ShowMore>
@@ -130,8 +153,13 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
                 showReplyTextBox={() => {
                   setShowReplyTextBox(true)
                 }}
+                styles={styles}
               />
-              <Comments elements={data.children} userData={userData} />
+              <Comments
+                elements={data.children}
+                userData={userData}
+                styles={styles}
+              />
               {showReplyTextBox && (
                 <WriteComment
                   element={data}
@@ -145,6 +173,7 @@ const CommentSingle = ({ element = {}, userData = {} }) => {
                   showReplyTextBox={() => {
                     setShowReplyTextBox(false)
                   }}
+                  styles={styles}
                 />
               )}
             </td>

@@ -8,10 +8,10 @@ const MoreActions = ({
   setDescription
 }) => {
   return (
-    <div className='ch-options-wrapper'>
-      <img className='ch-more-icon' src={moreIcon} />
-      <div className='ch-options-actions-wrapper'>
-        <div className='ch-options-actions'>
+    <div className='ch-news-feed-more-options-wrapper'>
+      <img className='more-options-icon' src={moreIcon} />
+      <div className='more-options-action-wrapper'>
+        <div className='more-options-action'>
           <span
             onClick={() => {
               showEditableTextBox(true)
